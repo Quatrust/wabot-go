@@ -1,6 +1,6 @@
 .idea
 .env
-store.db
+*.db
 app.log
 cmd.log
 main
