@@ -1,6 +1,7 @@
 # wabot-go
 
 a Golang version of Roxy WhatsApp Bot with Command Handler helper
+
 this is a modified version of [goRoxy](github.com/itzngga/goRoxy)
 
 # Installation
@@ -23,8 +24,8 @@ setup by copy the .env.example to .env
 ### PostgresSQL
 `STORE_MODE=postgres`
 
-### Sqlite3
-`STORE_MODE=sqlite3`
+### Sqlite
+`STORE_MODE=sqlite`
 
 `SQLITE_FILE=store.db`
 
