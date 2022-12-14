@@ -8,6 +8,9 @@ var (
 	UtilitiesCategory = &Category{
 		Name:        "Utilities",
 	}
+	GroupCategory = &Category{
+		Name:        "Group",
+	}
 	MiscCategory = &Category{
 		Name:        "Misc",
 	}

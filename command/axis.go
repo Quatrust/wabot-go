@@ -12,11 +12,12 @@ import (
 
 func AxisCommand() {
 	AddCommand(&handler.Command{
-		Name:        "axis",
-		Aliases:     []string{"tembak"},
-		Category:    handler.MiscCategory,
-		RunFunc:     AxisRunFunc,
-		PrivateOnly: true,
+		Name:         "axis",
+		Aliases:      []string{"tembak"},
+		Category:     handler.MiscCategory,
+		RunFunc:      AxisRunFunc,
+		PrivateOnly:  true,
+		HideFromHelp: true,
 	})
 }
 

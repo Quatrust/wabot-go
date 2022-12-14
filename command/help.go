@@ -12,14 +12,18 @@ import (
 
 func HelpCommand() {
 	AddCommand(&handler.Command{
-		Name:        "help",
-		Aliases:     []string{"menu","h"},
-		Category:    handler.UtilitiesCategory,
-		RunFunc:     HelpRunFunc,
+		Name:         "help",
+		Aliases:      []string{"menu","h"},
+		Category:     handler.UtilitiesCategory,
+		RunFunc:      HelpRunFunc,
+		HideFromHelp: true,
 	})
 }
 
 func generateCmdText(cmdList []*handler.Command, prefix string) string {
+  if len(cmdList) == 0 {
+    return ""
+  }
   text := fmt.Sprintf("*📃%s*\n", cmdList[0].Category.Name)
   for i, v := range cmdList {
     if i == (len(cmdList) - 1) {
@@ -42,19 +46,22 @@ func HelpRunFunc(c *whatsmeow.Client, args handler.RunFuncArgs) *waProto.Message
     greetings = "Konnichiwa"
   }
   
-  var Utilities, Misc []*handler.Command
+  var Utilities, Misc, Group []*handler.Command
   for _, data := range Commands {
     if data.HideFromHelp {
       continue
     }
     if data.Category.Name == "Utilities"{
       Utilities = append(Utilities, data)
+    } else if data.Category.Name == "Group"{
+      Group = append(Group, data)
     } else if data.Category.Name == "Misc"{
       Misc = append(Misc, data)
     }
   }
   text := fmt.Sprintf("%s *%s*👋\n📬 Need help? Here are all of my commands:\n\n", greetings, args.Evm.Info.PushName)
   text += generateCmdText(Utilities, prefix)
+  text += generateCmdText(Group, prefix)
   text += generateCmdText(Misc, prefix)
 	return util.SendReplyText(args.Evm, text)
 }

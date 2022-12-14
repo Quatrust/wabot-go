@@ -71,12 +71,16 @@ func (b *Base) MessageEvents(evt interface{}) {
   			Args:   strings.Split(parsed, " "),
   		}
   		
+  		ContinueByMiddleware := false
 		  handler.MsgMiddleware.Range(func(key string, value handler.MiddlewareFunc) bool {
   			if !value(b.client, args) {
-  			  return false
+  			  ContinueByMiddleware = true
   			}
   			return true
 		  })
+		  if ContinueByMiddleware {
+		    return
+		  }
 		 	go b.Muxer.RunCommand(b.client, args)
 		}
 	}

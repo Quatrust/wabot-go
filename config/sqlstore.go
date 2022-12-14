@@ -3,7 +3,6 @@ package config
 import (
 	"go.mau.fi/whatsmeow/store/sqlstore"
 	"os"
-	"fmt"
 )
 
 func SqlStoreContainer() *sqlstore.Container {
@@ -14,7 +13,7 @@ func SqlStoreContainer() *sqlstore.Container {
 		}
 		return container
 	} else {
-		container, err := sqlstore.New("sqlite3", fmt.Sprintf("file:%s?_foreign_keys=on", os.Getenv("SQLITE_FILE")), NewWaDBLog())
+		container, err := sqlstore.New("sqlite3", CreateSqliteDsn(), NewWaDBLog())
 		if err != nil {
 			panic(err)
 		}

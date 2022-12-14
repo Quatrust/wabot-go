@@ -1,6 +1,7 @@
 package handler
 
 import (
+  "os"
 	"fmt"
 	"github.com/fdvky1/wabot-go/helper"
 	"github.com/fdvky1/wabot-go/util"
@@ -56,13 +57,16 @@ func (m *Muxer) RunCommand(c *whatsmeow.Client, args RunFuncArgs) {
 	}
 	
 	if args.Cmd != nil {
+	  ContinueByMiddleware := false
 		GlobalMiddleware.Range(func(key string, value MiddlewareFunc) bool {
 			if !value(c, args) {
-				return false
+				ContinueByMiddleware = true
 			}
 			return true
 		})
-
+		if ContinueByMiddleware {
+		  return
+		}
 		if args.Cmd.Middleware != nil {
 			if !args.Cmd.Middleware(c, args) {
 				return
@@ -74,7 +78,7 @@ func (m *Muxer) RunCommand(c *whatsmeow.Client, args RunFuncArgs) {
 				return
 			}
 		}
-		if args.Cmd.AdminOnly && args.Evm.Info.IsGroup {
+		if args.Cmd.AdminOnly && args.Evm.Info.IsGroup && os.Getenv("MODE") != "self" {
 		  GroupInfo, err := c.GetGroupInfo(args.Evm.Info.Chat)
 		  if err != nil {
 		    return

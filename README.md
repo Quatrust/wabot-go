@@ -1,6 +1,7 @@
-# goRoxy
+# wabot-go
 
 a Golang version of Roxy WhatsApp Bot with Command Handler helper
+this is a modified version of [goRoxy](github.com/itzngga/goRoxy)
 
 # Installation
 
@@ -22,13 +23,17 @@ setup by copy the .env.example to .env
 ### PostgresSQL
 `STORE_MODE=postgres`
 
-### Sqlite
-`STORE_MODE=sqlite`
+### Sqlite3
+`STORE_MODE=sqlite3`
 
 `SQLITE_FILE=store.db`
 
 ### Command Cooldown Duration
 `DEFAULT_COOLDOWN_SEC=5`
+
+### Self Mode
+self mode allows only you to use commands
+`MODE=self`
 
 # Add a Command
 create a simple command with:
@@ -38,8 +43,8 @@ create a simple command with:
 package command
 
 import (
-	"github.com/itzngga/goRoxy/internal/handler"
-	"github.com/itzngga/goRoxy/util"
+	"github.com/fdvky1/wabot-go/internal/handler"
+	"github.com/fdvky1/wabot-go/util"
 	"go.mau.fi/whatsmeow"
 	waProto "go.mau.fi/whatsmeow/binary/proto"
 	"go.mau.fi/whatsmeow/types/events"
@@ -59,6 +64,7 @@ func HelloRunFunc(c *whatsmeow.Client, args handler.RunFuncArgs) *waProto.Messag
 	return util.SendReplyText(args.Evm, "Hello World!")
 }
 ```
+
 ### Note
 Function needs to contains "Command" word, or it will not be generated
 
@@ -72,8 +78,8 @@ package command
 
 import (
 	"fmt"
-	"github.com/itzngga/goRoxy/internal/handler"
-	"github.com/itzngga/goRoxy/util"
+	"github.com/fdvky1/wabot-go/internal/handler"
+	"github.com/fdvky1/wabot-go/util"
 	"go.mau.fi/whatsmeow"
 	waProto "go.mau.fi/whatsmeow/binary/proto"
 	"go.mau.fi/whatsmeow/types/events"
@@ -98,6 +104,7 @@ func HelloMiddleware(c *whatsmeow.Client, args handler.RunFuncArgs) bool {
 	return true
 }
 ```
+
 ### Global middleware
 all command run this middleware
 
@@ -107,7 +114,7 @@ package middleware
 
 import (
 	"fmt"
-	"github.com/itzngga/goRoxy/internal/handler"
+	"github.com/fdvky1/wabot-go/internal/handler"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/types/events"
 )
@@ -122,7 +129,7 @@ func LogMiddleware(c *whatsmeow.Client, args handler.RunFuncArgs) bool {
 ```go
 package middleware
 
-import "github.com/itzngga/goRoxy/internal/handler"
+import "github.com/fdvky1/wabot-go/internal/handler"
 
 func GenerateAllMiddlewares() {
 	AddMiddleware(LogMiddleware) // <-- append new middleware here
@@ -132,11 +139,53 @@ func AddMiddleware(mid handler.MiddlewareFunc) {
 	handler.GlobalMiddleware = append(handler.GlobalMiddleware, mid)
 }
 ```
+
+# Message Middleware
+message middleware is function after message is received
+
+### middleware/message/log.go
+```go
+package MessageMiddleware
+
+import (
+  "fmt"
+	"github.com/fdvky1/wabot-go/internal/handler"
+	"go.mau.fi/whatsmeow"
+)
+
+func LogMiddleware(c *whatsmeow.Client, args handler.RunFuncArgs) bool {
+	if args.Cmd == nil && args.Msg != "" {
+	  fmt.Println(fmt.Sprintf("[MSG] [%s] message : %s", args.Number, args.Msg))
+	}
+	return true
+}
+
+```
+
+### middleware/message/zInit.go
+```go
+package MessageMiddleware
+
+import (
+	"github.com/fdvky1/wabot-go/helper"
+	"github.com/fdvky1/wabot-go/internal/handler"
+)
+
+func GenerateAllMiddlewares() {
+	AddMiddleware(LogMiddleware)
+}
+
+func AddMiddleware(mid handler.MiddlewareFunc) {
+	handler.MsgMiddleware.Store(helper.CreateUid(), mid)
+}
+
+```
+
 # Helper/Util
-[UTIL](https://github.com/itzngga/goRoxy/tree/master/util)
+[UTIL](https://github.com/fdvky1/wabot-go/tree/master/util)
 
 # License
-[GNU](https://github.com/ItzNgga/goRoxy/blob/master/LICENSE)
+[GNU](https://github.com/fdvky1/wabot-go/blob/master/LICENSE)
 
 # Bugs
 Please submit an issue when Race Condition detected or anything

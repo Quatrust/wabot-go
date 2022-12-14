@@ -12,9 +12,9 @@ import (
 
 func EveryoneCommand() {
 	AddCommand(&handler.Command{
-		Name:        "tagall",
-		Aliases:     []string{"hidetag", "ht", "everyone", "mentionall"},
-		Category:    handler.UtilitiesCategory,
+		Name:        "everyone",
+		Aliases:     []string{"hidetag", "ht", "tagall", "mentionall"},
+		Category:    handler.GroupCategory,
 		RunFunc:     EveryoneRunFunc,
 		GroupOnly:   true,
 		AdminOnly:   true,

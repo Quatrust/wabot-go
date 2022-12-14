@@ -17,11 +17,13 @@ func DelState(number string, types string) {
 }
 func GenerateAllCommands() {
 	StateMap = skipmap.NewString[int]()
-	HelpCommand()
-	HiCommand()
-	StickerCommand()
+	AddParticipantsCommand()
 	AxisCommand()
 	EveryoneCommand()
+	HelpCommand()
+	HiCommand()
+	KickParticipantsCommand()
+	StickerCommand()
 }
 
 func AddCommand(command *handler.Command) {
