@@ -34,6 +34,7 @@ setup by copy the .env.example to .env
 
 ### Self Mode
 self mode allows only you to use commands
+
 `MODE=self`
 
 # Add a Command
